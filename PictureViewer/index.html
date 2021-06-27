@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Picture Viewer</title>
+    <style>
+        .product-image-container {
+            flex-basis: 25%;
+        }
+        .product-image-container > div {
+            height: 100%;
+        }
+        .product-image-container img {
+            width: 100%;
+            height: 100%;
+        }
+        .product-image-container figcaption {
+            text-align: center;
+            font-weight: bold;
+        }
+        .product-list-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script type="text/babel">
+
+        const imageMockData = [{
+            contentId: 'Product-EG4704',
+            defaultAsset: {
+                publishedURL: '/static/Product-EG4704/adidas_adi_EG4704_1.jpg',
+                filename: 'adidas_adi_EG4704_1.jpg'
+            },
+            text: {
+                name: 'SL20',
+                longName: "Men's adidas Running SL20 Shoes",
+            }
+        },
+        {
+            contentId: 'Product-EG3283',
+            defaultAsset: {
+                publishedURL: '/static/Product/MEN_CORE-SPORTS_INSPIRED_SHOES_EG3283_1.jpg',
+                filename: 'MEN_CORE-SPORTS_INSPIRED_SHOES_EG3283_1.jpg'
+            },
+            text: {
+                name: 'LITE RACER 2.0',
+                longName: "Men's Sports Inspired Lite Racer 2.0 Shoes",
+            }
+        },
+        {
+            contentId: 'Product-CM4939',
+            defaultAsset: {
+                publishedURL: '/static/Product-CM4939/adidas_CM4939_1.jpg',
+                filename: 'adidas_CM4939_1.jpg'
+            },
+            text: {
+                name: 'Strikerr M',
+                longName: "Men's adidas Running Strikerr Shoes",
+            }
+        },
+        {
+            contentId: 'Product-FW6769',
+            defaultAsset: {
+                publishedURL: '/static/Product-FW6769/adidas_FW6769_1.jpg',
+                filename: 'adidas_FW6769_1.jpg'
+            },
+            text: {
+                name: 'DURAMO SL',
+                longName: "adidas Men's Running Duramo SL Shoes",
+            }
+        },
+        {
+            contentId: 'Product-EH0055',
+            defaultAsset: {
+                publishedURL: '/static/Product-EH0055/adidas_EH0055_1.jpg',
+                filename: 'adidas_EH0055_1.jpg'
+            },
+            text: {
+                name: 'X9000L3 M',
+                longName: "Men's adidas Running X9000L3 Shoes",
+            }
+        }];
+
+        const getImageData = () => imageMockData;
+
+        const staticImageSrc = './images/coming-soon.png';
+
+        class PictureViewer extends React.PureComponent {
+            state = {
+                imageData: []
+            }
+            componentDidMount() {
+                const imageData = getImageData();
+                this.setState({ imageData });
+            }
+            handleImageLoadError = (e) => {
+                e.target.src = staticImageSrc;
+            }
+            renderImages = () => {
+                const { imageData, dummayImageData } = this.state;
+                const images = imageData.map(img => {
+                    const { contentId, defaultAsset, text } = img;
+                    const { publishedURL } = defaultAsset;
+                    const { longName } = text;
+                    const src = `https://content.adidas.co.in${publishedURL}`;
+                    return (
+                        <figure key={contentId} className="product-image-container">
+                            <div>
+                                <img
+                                    alt={longName}
+                                    src={src}
+                                    onError={(e) => e.target.src === staticImageSrc ? null : this.handleImageLoadError(e)}
+                                />
+                            </div>
+                            <figcaption>{longName}</figcaption>
+                        </figure>
+                    );
+                });
+                return <div className="product-list-container">{images}</div>;
+            };
+
+            render() {
+                return (
+                    <div>{this.renderImages()}</div>
+                );
+            }
+        }
+
+        // render react component
+        ReactDOM.render(<PictureViewer />, document.querySelector('#app'));
+    </script>
+</body>
+
+</html>
